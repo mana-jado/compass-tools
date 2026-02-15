@@ -1403,7 +1403,7 @@
             "periodic": {
               "name": "老鹰",
               "interval": 650,
-              "multiplier": 1.35
+              "multiplier": 0.964
             }
           }
         }
