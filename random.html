@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机角色抽取 - Compass Tools</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <style>
+        .random-container {
+            max-width: 600px;
+            margin: 40px auto;
+            text-align: center;
+            padding: 20px;
+        }
+        .random-container h1 {
+            margin-bottom: 30px;
+        }
+        .character-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .character-image {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            margin-bottom: 20px;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .character-name {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .character-role {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .role-spr { background-color: #5d9cec; } /* Blue for Sprinter */
+        .role-atk { background-color: #ac92ec; } /* Purple for Attacker (adjust as needed) - typically Red/Orange but using existing style cues if any */
+        .role-gun { background-color: #4fc1e9; } /* Cyan for Gunner */
+        .role-tnk { background-color: #a0d468; } /* Green for Tank */
+        
+        /* Adjust colors based on typical game colors if known. 
+           Attacker: Red, Gunner: Blue/Cyan, Tank: Yellow/Green, Sprinter: Purple/Blue? 
+           Let's use generic safe colors or match game UI if possible.
+           Standard: Atk=Red, Gun=Yellow/Blue, Tnk=Green, Spr=Purple/Blue
+        */
+        .role-atk { background-color: #e74c3c; }
+        .role-gun { background-color: #f1c40f; color: #333; }
+        .role-tnk { background-color: #2ecc71; }
+        .role-spr { background-color: #3498db; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        .stat-label { color: #666; }
+        .stat-value { font-weight: bold; color: #333; }
+        
+        .roll-btn {
+            font-size: 1.5rem;
+            padding: 15px 40px;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+        }
+        .roll-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 75, 43, 0.6);
+        }
+        .roll-btn:active {
+            transform: scale(0.95);
+        }
+        .filter-group {
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        .filter-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #333;
+        }
+        .filter-label input {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <script src="js/navbar.js"></script>
+
+    <div class="random-container">
+        <h1>🎲 随机角色</h1>
+        
+        <div class="filter-group">
+            <label class="filter-label">
+                <input type="checkbox" id="filter-atk" checked> 拳 (ATK)
+            </label>
+            <label class="filter-label">
+                <input type="checkbox" id="filter-gun" checked> 枪 (GUN)
+            </label>
+            <label class="filter-label">
+                <input type="checkbox" id="filter-tnk" checked> 盾 (TNK)
+            </label>
+            <label class="filter-label">
+                <input type="checkbox" id="filter-spr" checked> 跑 (SPR)
+            </label>
+        </div>
+
+        <button id="roll-btn" class="roll-btn">开始抽取</button>
+
+        <div id="result-card" class="character-card">
+            <img id="char-img" src="" alt="Character Image" class="character-image">
+            <h2 id="char-name" class="character-name">Character Name</h2>
+            <span id="char-role" class="character-role">ROLE</span>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">攻击倍率</span>
+                    <span id="stat-atk" class="stat-value">1.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">防御倍率</span>
+                    <span id="stat-def" class="stat-value">1.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">体力倍率</span>
+                    <span id="stat-hp" class="stat-value">1.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">移动速度</span>
+                    <span id="stat-spd" class="stat-value">1.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/random.js"></script>
+</body>
+</html>

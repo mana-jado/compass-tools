@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass 伤害模拟对比工具</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dropdown.css">
+    <link rel="stylesheet" href="css/help.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/lib/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部控制栏 -->
+        <header class="header">
+            <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center;">
+                    <h1>Compass 伤害模拟对比工具</h1>
+                    <div id="help-icon" class="help-icon">?</div>
+                </div>
+                <div style="font-size: 12px; color: #888; margin-top: 4px;">数据更新时间：2026/01/26</div>
+            </div>
+            <div class="global-settings">
+                <div class="setting-item">
+                    <label>攻击基准值</label>
+                    <input type="number" id="global-attack" value="1000">
+                </div>
+                <div class="setting-item">
+                    <label>防御基准值</label>
+                    <input type="number" id="global-defense" value="200">
+                </div>
+                <div class="setting-item">
+                    <label>输出时间(秒)</label>
+                    <input type="number" id="global-duration" value="3" step="0.1">
+                </div>
+            </div>
+        </header>
+
+        <!-- 主体内容 -->
+        <main class="main-content">
+            <!-- 左侧：图表与排行榜 -->
+            <section class="visualization-panel">
+                <div class="chart-controls">
+                    <div class="control-group">
+                        <label>Y轴显示</label>
+                        <select id="chart-yaxis-mode">
+                            <option value="dps">DPS (每秒伤害)</option>
+                            <option value="total">总伤害</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>显示范围</label>
+                        <input type="number" id="chart-start-time" value="0" step="0.1" style="width: 60px;"> ~ 
+                        <input type="number" id="chart-end-time" value="3" step="0.1" style="width: 60px;"> 秒
+                    </div>
+                    <div class="control-group">
+                        <label>显示模式</label>
+                        <select id="chart-display-mode">
+                            <option value="top">前 N 名</option>
+                            <option value="all">全对象</option>
+                            <option value="custom">指定对象</option>
+                        </select>
+                        <input type="number" id="chart-top-n" value="5" style="width: 50px;">
+                        <button id="chart-custom-select-btn" style="display:none;">选择对象</button>
+                    </div>
+                    <div class="control-group">
+                        <button id="add-object-btn" class="primary-btn">+ 添加对象</button>
+                        <button id="bulk-menu-btn" class="primary-btn" style="background-color: #2b3ea6; margin-left: 5px;">批量添加</button>
+                        <button id="clear-all-btn" class="primary-btn" style="background-color: #e74c3c; margin-left: 5px;">一键清除</button>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="damage-chart"></canvas>
+                </div>
+
+                <div class="leaderboard-container">
+                    <h3>排行榜</h3>
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>颜色</th>
+                                <th>排名</th>
+                                <th>角色</th>
+                                <th>名称</th>
+                                <th>状态</th>
+                                <th>DPS</th>
+                                <th>总伤害</th>
+                                <th>攻击倍率</th>
+                                <th>防御倍率</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <!-- 动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 弹窗：新建/编辑对象 -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">添加对比对象</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>选择角色</label>
+                    <div class="custom-select-wrapper" id="modal-char-custom-wrapper">
+                        <div class="custom-select-trigger" id="modal-char-trigger">
+                            <div class="selected-content" id="modal-char-selected-content">
+                                <span>选择角色</span>
+                            </div>
+                            <span class="arrow">▼</span>
+                        </div>
+                        <div class="custom-options hidden" id="modal-char-options">
+                            <!-- Options populated by JS -->
+                        </div>
+                        <select id="modal-char-select" style="display:none;"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>角色状态</label>
+                    <select id="modal-variant-select">
+                        <option value="default">默认</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>攻击增益系数</label>
+                    <input type="number" id="modal-attack-mod" value="1.0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>防御减益系数</label>
+                    <input type="number" id="modal-defense-mod" value="1.0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>自定义线条颜色</label>
+                    <input type="color" id="modal-color-picker">
+                    <span id="modal-color-val"></span>
+                </div>
+                <div class="form-group switch-container" style="margin-top: 15px;">
+                    <label class="switch">
+                        <input type="checkbox" id="modal-auto-darken">
+                        <span class="slider round"></span>
+                    </label>
+                    <span style="margin-left: 8px;">自动加深浅色线条</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-save-btn" class="primary-btn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗：自定义图表显示对象选择 -->
+    <div id="custom-select-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>选择显示的折线</h3>
+                <button class="close-custom-select">&times;</button>
+            </div>
+            <div class="modal-body" id="custom-select-list">
+                <!-- Checkboxes -->
+            </div>
+            <div class="modal-footer">
+                <button id="custom-select-confirm" class="primary-btn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗：批量添加对象 -->
+    <div id="bulk-modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>批量添加对象</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="bulk-include-variants-modal">
+                        <span class="slider round"></span>
+                    </label>
+                    <span style="margin-left: 8px;">包含全状态</span>
+                </div>
+                <div class="form-group switch-container" style="margin-top: 10px;">
+                    <label class="switch">
+                        <input type="checkbox" id="bulk-auto-darken-modal">
+                        <span class="slider round"></span>
+                    </label>
+                    <span style="margin-left: 8px;">自动加深浅色线条</span>
+                </div>
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                <div class="bulk-actions">
+                    <button id="bulk-add-all-btn" class="primary-btn" style="width: 100%; margin-bottom: 10px;">添加全部角色</button>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <button id="bulk-add-atk-btn" class="primary-btn" style="flex: 1;">添加全部拳职 (ATK)</button>
+                        <button id="bulk-add-gun-btn" class="primary-btn" style="flex: 1;">添加全部枪职 (GUN)</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="bulk-add-spr-btn" class="primary-btn" style="flex: 1;">添加全部跑职 (SPR)</button>
+                        <button id="bulk-add-tnk-btn" class="primary-btn" style="flex: 1;">添加全部盾职 (TNK)</button>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="modal-footer"></div> -->
+        </div>
+    </div>
+
+    <!-- 弹窗：帮助说明 -->
+    <div id="help-modal-overlay" class="modal-overlay hidden">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>使用说明</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" style="line-height: 1.6; color: #333;">
+                <p>使用说明...</p>
+                <p>1，攻击基准值为卡组攻板</p>
+                <p>2，防御基准值为对方的实际防御值</p>
+                <p>3，排行榜以到达输出时间后的总伤害值进行排序</p>
+                <p>4，更改“添加对象”页面的攻防系数可以模拟角色使用绿强/妈弱/下划/克制/徽章等增益</p>
+                <p>5，不考虑走A的情况，主要是没找到啥数值能参考（</p>
+            </div>
+            <!-- <div class="modal-footer"></div> -->
+        </div>
+    </div>
+
+    <script src="js/navbar.js"></script>
+    <script src="DamageEngine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

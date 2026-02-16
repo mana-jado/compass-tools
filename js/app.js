@@ -42,11 +42,23 @@ async function init() {
         // Initialize UI
         setupEventListeners();
         
+        // Sync initial language with global state if available
+        if (window.getGlobalLang) {
+            state.globalSettings.language = window.getGlobalLang();
+        }
+        
         // Initialize with all characters as default comparison objects
         initializeDefaultComparisonObjects();
         
         // Initial Render
         updateSimulation();
+
+        // Listen for global language changes
+        window.addEventListener('langChanged', (e) => {
+            state.globalSettings.language = e.detail.lang;
+            renderLeaderboard();
+            renderChart();
+        });
         
     } catch (error) {
         console.error("Failed to initialize:", error);
@@ -366,11 +378,7 @@ function setupEventListeners() {
         state.globalSettings.duration = parseFloat(e.target.value);
         updateSimulation();
     });
-    document.getElementById('language-select').addEventListener('change', (e) => {
-        state.globalSettings.language = e.target.value;
-        renderLeaderboard();
-        renderChart(); // To update legends
-    });
+    // Removed legacy language selector listener
 
     // Chart Controls
     document.getElementById('chart-yaxis-mode').addEventListener('change', (e) => {

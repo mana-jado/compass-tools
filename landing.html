@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass Tools - 综合工具站</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .hero {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 60px 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+        .card h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <script src="js/navbar.js"></script>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Compass Tools</h1>
+            <p>新年快乐</p>
+        </div>
+
+        <div class="cards-container">
+            <a href="calculator.html" class="card">
+                <span class="card-icon">📊</span>
+                <h2>伤害比较工具</h2>
+                <p>DPS 计算工具，支持多角色对比、图表分析与排行榜展示。</p>
+            </a>
+            <a href="random.html" class="card">
+                <span class="card-icon">🎲</span>
+                <h2>随机角色抽取</h2>
+                <p>不知道玩什么？随机抽取一个角色，查看其基础属性与职业信息。</p>
+            </a>
+            <a href="oc_maker.html" class="card">
+                <span class="card-icon">✨</span>
+                <h2>随机角色生成</h2>
+                <p>基于现有数据模板，生成随机角色设定卡。</p>
+                <p>完全没做完，先别用。</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
