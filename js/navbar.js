@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <ul class="navbar-menu">
                     <li><a href="random.html">随机角色</a></li>
                     <li><a href="random_card.html">随机卡组</a></li>
-                    <li><a href="oc_maker.html">角色生成</a></li>
+                    <li><a href="character_maker.html">角色生成</a></li>
                     <li><a href="calculator.html">伤害比较</a></li>
                 </ul>
                 <div class="navbar-lang" style="display: flex; align-items: center;">

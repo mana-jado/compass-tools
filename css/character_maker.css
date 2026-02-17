@@ -1,0 +1,293 @@
+/* Layout Styles */
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.controls-section {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    height: fit-content;
+    z-index: 10;
+}
+
+.preview-section {
+    flex: 2;
+    min-width: 350px;
+    display: flex;
+    justify-content: center;
+    /* overflow: auto; Removed to avoid scrollbars hiding scaled content */
+    position: relative;
+    min-height: 600px; /* Ensure space for the scaled container */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.generate-btn, .download-btn {
+    width: 100%;
+    padding: 15px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.generate-btn:hover { background: #27ae60; }
+.download-btn:hover { background: #2980b9; }
+
+/* Ported Styles from Tensei Compass */
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('../assets/fonts/compass.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CharacteristicFont';
+  src: url('../assets/fonts/characteristicFont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Preview Wrapper for Layout Stability */
+.preview-wrapper {
+    position: relative;
+    width: 472.5px; /* 945 * 0.5 */
+    height: 550px; /* 1100 * 0.5 */
+    flex-shrink: 0; /* Prevent wrapper from shrinking */
+    margin: 0 auto;
+}
+
+.compass-container {
+  background-image: url('../assets/images/background/background.jpg');
+  background-size: cover;
+  width: 945px;
+  min-width: 945px; /* Ensure fixed width */
+  height: 1100px;
+  min-height: 1100px; /* Ensure fixed height */
+  position: absolute; /* Changed to absolute to sit inside wrapper */
+  top: 0;
+  left: 0;
+  overflow: visible;
+  box-sizing: border-box;
+  z-index: 1;
+  /* Scaling for preview */
+  transform-origin: top left; /* Scale from top-left corner */
+  transform: scale(0.5); 
+}
+
+@media (max-width: 800px) {
+    .preview-wrapper {
+        width: 330.75px; /* 945 * 0.35 */
+        height: 385px; /* 1100 * 0.35 */
+    }
+    .compass-container {
+        transform: scale(0.35);
+    }
+    .preview-section {
+        min-height: 400px;
+    }
+}
+
+.frontground-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.user-avatar {
+  /* Size will be calculated by JS */
+  width: auto;
+  height: auto;
+  object-fit: fill; /* Use fill or contain, but JS will set dimensions so it doesn't matter much if we don't force size */
+  border-radius: 0%;
+  position: absolute;
+  top: 27px;
+  right: 27px; /* Changed from left positioning */
+  left: auto;
+  z-index: 2;
+}
+
+.hexagon-icon {
+  position: absolute;
+  top: 25px;
+  left: 35px;
+  width: 75px;
+  height: 75px;
+  z-index: 4;
+  background-color: #333;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.icon-image {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+.compass-username {
+  position: absolute;
+  top: 33px;
+  left: 120px;
+  font-size: 48px;
+  font-weight: bold;
+  font-family: 'MyCustomFont', 'Arial', sans-serif;
+  height: 60px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 4;
+  color: #333;
+}
+
+.stats-wrapper {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  width: 640px;
+  height: 200px;
+  overflow: visible;
+}
+
+.stat-container {
+  position: absolute;
+  overflow: visible;
+  width: 640px;
+  height: 35px;
+  z-index: 4;
+}
+
+.stat-container:nth-child(1) { top: 1px; left: 0; }
+.stat-container:nth-child(2) { top: 53px; left: 0; }
+.stat-container:nth-child(3) { top: 105px; left: 0; }
+
+.stat-content {
+  position: absolute;
+  left: 170px;
+  width: 490px;
+  height: 35px;
+}
+
+.stat-bar-bg {
+  height: 35px;
+  background-color: #4d4d4d;
+  position: absolute;
+  width: 427px;
+}
+
+.stat-bar {
+  height: 100%;
+  background-color: #F27561;
+}
+
+.stat-bar-max {
+  background: linear-gradient(90deg, #F27561, #FFD700, #F27561);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.stat-value {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-weight: bold;
+  z-index: 2;
+  font-family: 'MyCustomFont', 'Arial', sans-serif;
+  font-size: 24px;
+}
+
+.cards-container {
+  position: absolute;
+  bottom: 87px;
+  left: 30px;
+  width: 920px;
+  height: 150px;
+  z-index: 4;
+}
+
+.card-item {
+  position: absolute;
+  bottom: 0;
+  width: 150px;
+  height: 150px;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-item:nth-child(1) { left: 30px; }
+.card-item:nth-child(2) { left: 250px; }
+.card-item:nth-child(3) { left: 480px; }
+.card-item:nth-child(4) { left: 705px; }
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.characteristics-container {
+  position: absolute;
+  left: 50px;
+  width: 500px;
+  z-index: 4;
+}
+
+.characteristic-text {
+  position: absolute;
+  font-family: 'CharacteristicFont', 'MyCustomFont', Arial, sans-serif;
+  font-size: 30px;
+  color: #7a7a7a;
+  text-align: left;
+  z-index: 4;
+  width: 400px;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.characteristic-text-1 { top: 350px; }
+.characteristic-text-2 { top: 480px; }
+.characteristic-text-3 { top: 610px; }

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原创角色生成器 - Compass Tools</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/character_maker.css">
+    <!-- html2canvas for image saving -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <script src="js/navbar.js"></script>
+
+    <div class="main-container">
+        <div class="controls-section">
+            <h1>✨ 随机角色生成器</h1>
+            <div class="form-group">
+                <label for="character-name">角色名称</label>
+                <input type="text" id="character-name" placeholder="输入角色名称">
+            </div>
+            <div class="form-group">
+                <label for="character-avatar">上传图像</label>
+                <input type="file" id="character-avatar" accept="image/*">
+            </div>
+            <button id="generate-btn" class="generate-btn">生成角色</button>
+            <button id="download-btn" class="download-btn" style="display:none; margin-top: 10px; background-color: #3498db;">保存图片</button>
+        </div>
+
+        <div class="preview-section">
+            <!-- Wrapper for scaling layout -->
+            <div id="preview-wrapper" class="preview-wrapper" style="display: none;">
+                <!-- This container matches the structure of tensei-compass-jh -->
+                <div id="compass-container" class="compass-container">
+                    <!-- Hexagon Icon -->
+                <div class="hexagon-icon">
+                    <img id="role-icon" class="icon-image" src="" alt="Icon" />
+                </div>
+                
+                <!-- Username -->
+                <div id="compass-username" class="compass-username"></div>
+                
+                <!-- Stats Wrapper -->
+                <div class="stats-wrapper">
+                    <!-- Stat 1: Attack -->
+                    <div class="stat-container">
+                        <div class="stat-content">
+                            <div class="stat-bar-bg">
+                                <div id="bar-atk" class="stat-bar" style="width: 0%;"></div>
+                                <div id="val-atk" class="stat-value">× 1.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat 2: Defense -->
+                    <div class="stat-container">
+                        <div class="stat-content">
+                            <div class="stat-bar-bg">
+                                <div id="bar-def" class="stat-bar" style="width: 0%;"></div>
+                                <div id="val-def" class="stat-value">× 1.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stat 3: Health -->
+                    <div class="stat-container">
+                        <div class="stat-content">
+                            <div class="stat-bar-bg">
+                                <div id="bar-hp" class="stat-bar" style="width: 0%;"></div>
+                                <div id="val-hp" class="stat-value">× 1.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Speed Cards -->
+                <div class="cards-container">
+                    <div class="card-item"><img id="card-1" class="card-image" src="" /></div>
+                    <div class="card-item"><img id="card-2" class="card-image" src="" /></div>
+                    <div class="card-item"><img id="card-3" class="card-image" src="" /></div>
+                    <div class="card-item"><img id="card-4" class="card-image" src="" /></div>
+                </div>
+                
+                <!-- Avatar -->
+                <img id="user-avatar-img" class="user-avatar" src="" alt="Avatar" />
+                
+                <!-- Foreground -->
+                <img class="frontground-image" src="assets/images/background/frontground.png" alt="Frontground" />
+                
+                <!-- Characteristics -->
+                <div class="characteristics-container">
+                    <div id="char-1" class="characteristic-text characteristic-text-1"></div>
+                    <div id="char-2" class="characteristic-text characteristic-text-2"></div>
+                    <div id="char-3" class="characteristic-text characteristic-text-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="js/character_maker.js"></script>
+</body>
+</html>
