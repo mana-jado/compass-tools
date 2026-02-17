@@ -80,8 +80,23 @@
         .stat-item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid #eee;
             padding-bottom: 5px;
+        }
+        @media (max-width: 768px) {
+            .random-container {
+                width: 95%;
+                padding: 10px;
+                margin: 20px auto;
+            }
+            .stats-grid {
+                gap: 10px;
+                padding: 10px;
+            }
+            .stat-item {
+                padding-bottom: 8px; /* 增加一点底部内边距，使分割线不那么紧凑 */
+            }
         }
         .stat-label { color: #666; }
         .stat-value { font-weight: bold; color: #333; }
