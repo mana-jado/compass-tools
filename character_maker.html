@@ -21,8 +21,14 @@
                 <input type="text" id="character-name" placeholder="输入角色名称">
             </div>
             <div class="form-group">
-                <label for="character-avatar">上传图像</label>
-                <input type="file" id="character-avatar" accept="image/*">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <label for="character-avatar" style="margin-bottom: 0;">上传图像</label>
+                    <label style="font-weight: normal; font-size: 0.9em; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="small-avatar-mode" style="width: auto; margin-right: 5px;">
+                        小图
+                    </label>
+                </div>
+                <input type="file" id="character-avatar" accept="image/*" style="margin-top: 8px;">
             </div>
             <button id="generate-btn" class="generate-btn">生成角色</button>
             <button id="download-btn" class="download-btn" style="display:none; margin-top: 10px; background-color: #3498db;">保存图片</button>

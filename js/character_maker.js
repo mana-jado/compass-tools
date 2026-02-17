@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-btn');
     const nameInput = document.getElementById('character-name');
     const avatarInput = document.getElementById('character-avatar');
+    const smallAvatarCheckbox = document.getElementById('small-avatar-mode');
     const compassContainer = document.getElementById('compass-container');
     const previewWrapper = document.getElementById('preview-wrapper');
 
@@ -70,6 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Calculate Avatar Dimensions based on rules
     function calculateDimensions(src, callback) {
+        const isSmallMode = smallAvatarCheckbox.checked;
+        const baseSize = isSmallMode ? 240 : 480;
+        const maxHeight = isSmallMode ? 335 : 670; // 670 / 2 = 335
+        const maxWidth = isSmallMode ? 445 : 891; // 891 / 2 = 445.5 -> 445
+
         const img = new Image();
         img.onload = () => {
             const w = img.naturalWidth;
@@ -77,32 +83,32 @@ document.addEventListener('DOMContentLoaded', () => {
             let finalW, finalH;
 
             // Logic: 
-            // 1. Scale proportionally so shorter side is 480px.
+            // 1. Scale proportionally so shorter side is baseSize.
             // 2. Handle extreme constraints.
 
             if (w < h) {
                 // Shorter side is width.
-                // Try scaling width to 480.
-                let scale = 480 / w;
-                finalW = 480;
+                // Try scaling width to baseSize.
+                let scale = baseSize / w;
+                finalW = baseSize;
                 finalH = h * scale;
 
-                // If height > 670, constrain height to 670.
-                if (finalH > 670) {
-                    finalH = 670;
-                    finalW = w * (670 / h);
+                // If height > maxHeight, constrain height.
+                if (finalH > maxHeight) {
+                    finalH = maxHeight;
+                    finalW = w * (maxHeight / h);
                 }
             } else {
                 // Shorter side is height (or square).
-                // Try scaling height to 480.
-                let scale = 480 / h;
-                finalH = 480;
+                // Try scaling height to baseSize.
+                let scale = baseSize / h;
+                finalH = baseSize;
                 finalW = w * scale;
 
-                // If width > 891, constrain width to 891.
-                if (finalW > 891) {
-                    finalW = 891;
-                    finalH = h * (891 / w);
+                // If width > maxWidth, constrain width.
+                if (finalW > maxWidth) {
+                    finalW = maxWidth;
+                    finalH = h * (maxWidth / w);
                 }
             }
             callback(finalW, finalH);
@@ -143,11 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 avatarImg.style.height = `${h}px`;
             });
         } else {
-            // No image uploaded: Show pure white square (480x480)
+            // No image uploaded: Show pure white square
+            const isSmallMode = smallAvatarCheckbox.checked;
+            const size = isSmallMode ? '240px' : '480px';
+            
             // Using a 1x1 white pixel base64
             avatarImg.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"; 
-            avatarImg.style.width = '480px';
-            avatarImg.style.height = '480px';
+            avatarImg.style.width = size;
+            avatarImg.style.height = size;
         }
 
         // Generate Stats
